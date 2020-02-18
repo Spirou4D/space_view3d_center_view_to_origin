@@ -24,7 +24,7 @@ bl_info = {
         "name": "Center view3D to Origin",
         "author": "Aldrik, Spirou4D",
         "blender": (2, 81, 0),
-        "version": (0, 3, 0),
+        "version": (0, 3, 1),
         "description": "Move the view to the World origin",
         "warning": "crtl + shift + Numpad .",
         "location": "3D Viewport > View",
@@ -68,25 +68,21 @@ class VIEW3D_PT_World_Origin_All(Panel):
 
 
 classes = (VIEW3D_OT_World_Origin_All, VIEW3D_PT_World_Origin_All)
+km_list = ['Object Mode','Mesh']
 # ------ register ------
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-    km_list = ['Object Mode', 'Mesh']
     for i in km_list:
-        sm = bpy.context.window_manager
-        km = sm.keyconfigs.default.keymaps[i]
-        kmi = km.keymap_items.new('wm.call_menu', 'NUMPAD_PERIOD', 'PRESS', ctrl=True, shift=True )
-        kmi.properties.name = "VIEW3D_OT_Origin_All_View"
+        km = bpy.context.window_manager.keyconfigs.default.keymaps[i]
+        kmi = km.keymap_items.new('view3d.origin_all_view', 'NUMPAD_PERIOD', 'PRESS', ctrl=True, shift=True )
 
 # ------ unregister ------
 def unregister():
-    km_list = ['Object Mode', 'Mesh']
     for i in km_list:
-        sm = bpy.context.window_manager
-        km = sm.keyconfigs.default.keymaps[i]
-        for kmi in (kmi for kmi in km.keymap_items if (kmi.idname == "wm.call_menu" and kmi.properties.name == "VIEW3D_OT_Origin_All_View")):
+        km = bpy.context.window_manager.keyconfigs.default.keymaps[i]
+        for kmi in (kmi for kmi in km.keymap_items if (kmi.idname == "view3d.origin_all_view")):
             km.keymap_items.remove(kmi)
 
     for cls in reversed(classes):
